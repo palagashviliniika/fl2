@@ -40,7 +40,7 @@ export const ServicesGrid = ({ items, viewAllLabel }: ServicesGridProps) => {
           <Link
             key={item.slug}
             href={`/services/${item.slug}`}
-            className="group flex items-center gap-4 rounded-[10px] bg-transparent border border-brown/30 transition-colors hover:bg-light"
+            className="group flex items-center rounded-[10px] bg-transparent border border-brown/30 transition-colors"
           >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden max-lg:rounded-[10px] lg:rounded-l-[10px]">
               <Image
@@ -51,11 +51,11 @@ export const ServicesGrid = ({ items, viewAllLabel }: ServicesGridProps) => {
                 sizes="80px"
               />
             </div>
-            <div className="py-2">
-              <span className="text-sm font-semibold text-text">
+            <div className="h-full py-2 rounded-r-[8px] px-4 group-hover:bg-brown duration-300">
+              <span className="text-base font-bold text-text group-hover:text-white duration-300">
                 {item.title}
               </span>
-              <p className="mt-0.5 text-xs text-text/60 line-clamp-2">
+              <p className="mt-0.5 text-xs text-text/60 line-clamp-2 group-hover:text-white duration-300">
                 {item.description}
               </p>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -13,6 +13,7 @@ import {
   LOCALE_FLAGS,
   TRANSPARENT_NAV_ROUTES,
 } from "@/shared/constants/navigation";
+import { useLockBodyScroll, useOutsideClick } from "@/shared/hooks";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -30,6 +31,7 @@ export function Navigation() {
   const locale = params.locale as Locale;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   const isTransparentPage = (
     TRANSPARENT_NAV_ROUTES as readonly string[]
@@ -47,6 +49,12 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isTransparentPage]);
 
+  useOutsideClick(headerRef, () => setMobileOpen(false), {
+    enabled: mobileOpen,
+  });
+
+  useLockBodyScroll({ enabled: mobileOpen });
+
   function switchLocale() {
     const next: Locale = locale === "en" ? "ka" : "en";
     router.replace(pathname, { locale: next });
@@ -55,8 +63,23 @@ export function Navigation() {
   const showSolid = !isTransparentPage || scrolled;
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+    <>
+      <button
+        type="button"
+        aria-label="Close menu"
+        aria-hidden={!mobileOpen}
+        tabIndex={mobileOpen ? 0 : -1}
+        onClick={() => setMobileOpen(false)}
+        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 lg:hidden ${
+          mobileOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      <header
+        ref={headerRef}
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         showSolid
           ? "bg-brown backdrop-blur-md"
           : "bg-brown/30 backdrop-blur-sm"
@@ -198,6 +221,7 @@ export function Navigation() {
         </nav>
       </div>
     </header>
+    </>
   );
 }
 

@@ -31,7 +31,7 @@ export async function Faq() {
                 value={i}
                 className="rounded-2xl bg-brown px-6 py-1 border-none"
               >
-                <AccordionTrigger className="py-5 text-base lg:text-[20px] font-medium text-light hover:no-underline">
+                <AccordionTrigger className="cursor-pointer py-5 text-base lg:text-[20px] font-medium text-light hover:no-underline">
                   {t(`items.${key}.question`)}
                 </AccordionTrigger>
                 <AccordionContent className="text-light/70">

@@ -25,7 +25,7 @@ export async function Testimonials() {
           </p>
         </div>
 
-        <div className="mt-10 w-full lg:mt-14">
+        <div className="mt-10 w-full px-6 lg:mt-14 lg:px-0">
           <TestimonialsSlider items={items} />
         </div>
       </div>
