@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ServiceDetailBlock } from "@/components/sections/services/service-detail-block";
+import {
+  SERVICE_ITEMS,
+  SERVICE_PLACEHOLDER_IMAGE,
+} from "@/shared/constants";
 
 function slugToLabel(slug: string) {
   return slug
@@ -7,6 +13,20 @@ function slugToLabel(slug: string) {
     .filter(Boolean)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+}
+
+function serviceImages(slug: string): string[] {
+  return [
+    SERVICE_PLACEHOLDER_IMAGE,
+    `https://picsum.photos/seed/${slug}-2/630/447`,
+    `https://picsum.photos/seed/${slug}-3/630/447`,
+  ];
+}
+
+function serviceImages2(slug: string): string[] {
+  return [
+    SERVICE_PLACEHOLDER_IMAGE,
+  ];
 }
 
 export async function generateMetadata({
@@ -29,14 +49,32 @@ export default async function ServiceDetailsPage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("services.details");
+
+  const service = SERVICE_ITEMS.find((item) => item.slug === slug);
+  if (!service) {
+    notFound();
+  }
+
+  const tServices = await getTranslations("common.services");
+  const tDetailDesc = await getTranslations("services.details.descriptions");
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-24">
-      <p className="text-sm uppercase tracking-widest text-zinc-500">{slug}</p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-        {t("overview")}
-      </h1>
+    <main className="pt-[90px] flex flex-col gap-[100px] my-20">
+      <ServiceDetailBlock
+        title={tServices(service.key)}
+        description={tDetailDesc(service.key)}
+        images={serviceImages(service.slug)}
+        direction="left"
+      />
+      <ServiceDetailBlock
+        description={tDetailDesc(service.key)}
+        images={serviceImages2(service.slug)}
+        direction="right"
+      />
+      <ServiceDetailBlock
+        description={tDetailDesc(service.key)}
+        direction="left"
+      />
     </main>
   );
 }
